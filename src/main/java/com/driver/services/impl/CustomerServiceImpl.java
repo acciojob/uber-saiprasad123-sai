@@ -12,6 +12,7 @@ import com.driver.repository.CustomerRepository;
 import com.driver.repository.DriverRepository;
 import com.driver.repository.TripBookingRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -65,12 +66,26 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = customerRepository2.findById(customerId).get();
 		tripBooking.setCustomer(customer);
 		tripBooking.setDriver(driver);
+		tripBooking.setStatus(TripStatus.CONFIRMED);
 		tripBooking.setBill(distanceInKm*driver.getCab().getPerKmRate());
-		customer.getTripBookingList().add(tripBooking);
-		driver.getTripBookingList().add(tripBooking);
+
+		List<TripBooking> customerList = customer.getTripBookingList();
+		if(customerList==null)
+			customerList = new ArrayList<>();
+		customerList.add(tripBooking);
+		customer.setTripBookingList(customerList);
+
+		List<TripBooking> listOfDrivers = driver.getTripBookingList();
+		if(listOfDrivers==null)
+			listOfDrivers = new ArrayList<>();
+		listOfDrivers.add(tripBooking);
+		driver.setTripBookingList(listOfDrivers);
+
+
 		customerRepository2.save(customer);
-		tripBookingRepository2.save(tripBooking);
 		driverRepository2.save(driver);
+
+		tripBookingRepository2.save(tripBooking);
 
 		return tripBooking;
 
