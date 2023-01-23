@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
 		Collections.sort(driverList, Comparator.comparingInt(Driver::getDriverId));
 		Driver driver = null;
 		for(Driver driver1:driverList){
-			if(driver1.getCab().isAvailable()) {
+			if(driver1.getCab().getAvailable()) {
 				driver = driver1;
 				break;
 			}
